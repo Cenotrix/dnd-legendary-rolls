@@ -151,18 +151,19 @@
 	const rollHistory = document.getElementById("roll-history");
 	const minDiceMan = document.getElementById("dice-manipulator-min");
 	const maxDiceMan = document.getElementById("dice-manipulator-max");
-	
-	
-	function diceMagic() {
-		/*
-		* rolls ist das Array, in dem später die Werte von einem roll stehen. Es wird 6 mal überschrieben und ausgegeben.
-		*/
-		let rolls = [];
-		/*
-		* Ability Plus Array zum abgleichen.
-		* Key ist der Wert value der Abilityplus in DnD
-		*/
-		const APA = new Array();
+	/*
+	* rolls ist das Array, in dem später die Werte von einem roll stehen. Es wird 6 mal überschrieben und ausgegeben.
+	* allValues ist das Array, in dem einfach alle Werte die zum displayed gebraucht werden drinne stehen.
+	* totalRollValue ist eine Variable in der der totale Wert von dem gerollten steht.
+	*/
+	var rolls = [];
+	var allValues = [];
+	var totalRollValue = 0;
+	/*
+	* APA = Ability Plus Array zum abgleichen.
+	* Key ist der Wert value der Abilityplus in DnD
+	*/
+	const APA = new Array();
 		APA[1] = -5;
 		APA[2] = -4;
 		APA[3] = -4;
@@ -181,59 +182,69 @@
 		APA[16] = 3;
 		APA[17] = 3;
 		APA[18] = 4;
-		/*
-		* Zählvariable
-		*/
-		let i = 0;
-		let n = 0;
-		let m = 0;
-		/*
-		* Zwischenspeichervariable
-		*/
-		let a = null;
-		let b = null;
-		let c = null;
-		let d = null;
-		let e = null;
-		let f = null;
+	/*
+	* Zählvariable
+	*/
+	var i = 0;
+	var n = 0;
+	var m = 0;
+	/*
+	* Zwischenspeichervariable
+	*/
+	var a;
+	var b;
+	
+	function diceMagic() {
+		totalRollValue = 0;
+		getAllValues();
 		
-		/*------------- Logic geht los -------------*/
-		/*
-		* e ist zum übergeben an die history
-		*/
-		e = [];
-		for(n = 0; n <= 5; n++){
-			for(i = 0; i <= 3; i++) {
-				rolls.push( randomDice()/*Ergebnis des Rolls, passiert 4 mal*/);
+		if(minDiceMan.value >= 36){
+			if(minDiceMan.value <= 108){
+				if(minDiceMan.value > totalRollValue){
+					diceMagic();
+				}
+			}else{
+				minDiceMan.value = 108;
+				if(minDiceMan.value > totalRollValue){
+				   diceMagic();
+			    }
 			}
-			
-			b = doMath(dropLowest(rolls));
-			e[n] = b;
-			
-			/*
-			* rolls array to string in a, 
-			* dann alle "," durch ein "+" ersetzten
-			* der Inhalt der li Element wird mit den Zahlen ersetzt
-			* rolls wird für den nächsten Schleifendurchlauf zum leeren Array.
-			*/
-			a = rolls.toString();
-			a = a.replace(/,/g," + ");
-			statlist.children[n].innerHTML = a + ", drop(" + rolls[0] + ")" + " = " + b  + " (" + APA[b] + ")";
-			rolls = [];
-			
-			
-			c = c + b;
-			d = d + APA[b];
 		}
-		totalValue.innerHTML = c;
-		totalAbilityValue.innerHTML = d;
-		/*
-		* e to string 
-		* string wird lesbarer
-		*/
-		e = e.toString();
-		e = e.replace(/,/g,", ");
-		addToHistory(e, c, d);
+		
+		if(maxDiceMan.value >= 36){
+			if(maxDiceMan.value <= 108){
+				if(maxDiceMan.value < totalRollValue){
+					die(diceMagic());
+				}
+			}else{
+				maxDiceMan.value = 108;
+				if(maxDiceMan.value < totalRollValue){
+					die(diceMagic());
+			    }
+			}
+		}
+		console.log("One done");
+	}
+	
+	function getAllValues() {
+		for(n = 0; n <= 5; n++){
+			for(i = 0; i <= 3; i++){
+				rolls.push(randomDice());
+				//console.log(rolls);
+			}
+			/*
+			* rolls wird aufsteigend sortiert
+			* all Values wird mit 6 rolls befüllt
+			*/
+			rolls = sortAsc(rolls);
+			allValues[n] = rolls;
+			rolls = [];
+			totalRollValue = totalRollValue + doMath(allValues[n]);
+			
+			
+			console.log(totalRollValue);
+			console.log(allValues);
+		}
 	}
 	
 	/* Rolling function
@@ -264,7 +275,7 @@
 	/* Drop lowest function
 	* Sortiert das Array der größe nach.
 	*/
-	function dropLowest(array) {
+	function sortAsc(array) {
 		array.sort(function(a, b){return a - b});
 		return array;
 	}
@@ -277,6 +288,9 @@
 		/*
 		* newTr erstellt immer neue table rows
 		* tr ist ein array mit allen tr's
+		* valueA = gewürfelte werte
+		* valueB = total ability plus
+		* valueC = total
 		*/
 		var newTr = document.createElement("tr");
 		var tr = document.getElementsByClassName("roll-history");
@@ -287,8 +301,8 @@
 		rollHistory.appendChild(newTr);
 		m = rollHistory.children.length - 1;
 		
+		addToHistoryTr(valueA, m);
 		addToHistoryTr(valueB, m);
-		addToHistoryTr(valueD, m);
 		addToHistoryTr(valueC, m);
 	}
 	/*
