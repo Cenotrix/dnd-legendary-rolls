@@ -1,0 +1,308 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>DnD Stat Roller</title>
+	<style>
+		/* Passende Farben für die Zukunft.
+		* #0e1e35
+		* #173c45
+		* #295a56
+		* #2d8064
+		* #a7ce97
+		* #fff
+		*/
+		body, * {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: sans-serif;
+			font-weight: 400;
+			color: #0e1e35;
+			font-size: 24px;
+		}
+		body {
+			
+		}
+		header {
+			display: flex;
+			flex-direction: column;
+			align-content: center;
+			justify-content: center;
+			text-align: center;
+			margin-bottom: 10%;
+			background: #295a56;
+			padding: 15px;
+			
+			/*DEBUGING BORDER*/
+			/*border: 1px solid red;*/
+		}
+		header h1, header .caption, .content .dice-magic #btn {
+			color: #fff;
+		}
+		header .caption {
+			font-size: 18px;
+		}
+		.content {
+			display: flex;
+			flex-direction: column;
+			align-content: center;
+			justify-content: center;
+			text-align: center;
+			width: 80%;
+			margin: 0 auto;
+			
+			/*DEBUGING BORDER*/
+			/*border: 1px solid black;*/
+		}
+		.content .options-caption {
+			margin-top: 15px;
+		}
+		.content input {
+			margin: 5px 0;
+		}
+		.content #statlist {
+			border-bottom: 2px solid #2d8064;
+			list-style: none;
+		}
+		.content .history-caption{
+			margin-top: 35px;
+		}
+		.content #roll-history {
+			width: 60%;
+			margin: 0 auto 35px auto;
+		}
+		.content .dice-magic {
+			margin-top: 35px;
+		}
+		.content .dice-magic #btn {
+			padding: 5px;
+			background: #295A56;
+			display: inline;
+			text-align: center;
+			cursor: pointer;
+		}
+		.content .dice-magic #btn:hover {
+			/*Vielleicht noch später coole Hovereffekte*/
+		}
+		footer h6 {
+			font-size: 14px;
+			position: fixed;
+			bottom: 0;
+		}
+	</style>
+</head>
+
+<body>
+	<header>
+		<h1>Easy Peasy DnD Charaktere erstellen?</h1>
+		<span class="caption">Look no further</span>
+	</header>
+	<div class="content">
+		
+		<ul id="statlist">
+			<li>0</li>
+			<li>0</li>
+			<li>0</li>
+			<li>0</li>
+			<li>0</li>
+			<li>0</li>
+		</ul>
+		
+		<p>Total</p>
+		<p id="total-value">0</p>
+		<p>Total Ability Plus</p>
+		<p id="total-ability-value">0</p>
+		
+		<div class="dice-magic">
+			<div id="btn">Dice Magic</div>
+		</div>
+		<span class="options-caption">Optional</span>
+		<input type="number" id="dice-manipulator-min" placeholder="Mindest Total-Wert (36-108)" min="36" max="108">
+		<input type="number" id="dice-manipulator-max" placeholder="Maximaler Total-Wert (36-108)" min="36" max="108">
+		<!-- History Liste einfügen -->
+		<span class="history-caption">Roll History</span>
+		<table id="roll-history">
+			<thead>
+				<tr>
+					<th class="caption">Gewürfelte Werte</th>
+					<th class="caption">Total Ability Plus</th>
+					<th class="caption">Total</th>
+				</tr>
+			</thead>
+			<tbody>
+				
+			</tbody>
+			
+			
+
+		</table>
+		
+	</div>
+	<footer>
+		<h6>Made by Matthias :)</h6>
+	</footer>
+</body>
+<script>
+	const btn = document.getElementById("btn");
+	const statlist = document.getElementById("statlist");
+	const totalValue = document.getElementById("total-value");
+	const totalAbilityValue = document.getElementById("total-ability-value");
+	const rollHistory = document.getElementById("roll-history");
+	const minDiceMan = document.getElementById("dice-manipulator-min");
+	const maxDiceMan = document.getElementById("dice-manipulator-max");
+	
+	
+	function diceMagic() {
+		/*
+		* rolls ist das Array, in dem später die Werte von einem roll stehen. Es wird 6 mal überschrieben und ausgegeben.
+		*/
+		let rolls = [];
+		/*
+		* Ability Plus Array zum abgleichen.
+		* Key ist der Wert value der Abilityplus in DnD
+		*/
+		const APA = new Array();
+		APA[1] = -5;
+		APA[2] = -4;
+		APA[3] = -4;
+		APA[4] = -3;
+		APA[5] = -3;
+		APA[6] = -2;
+		APA[7] = -2;
+		APA[8] = -1;
+		APA[9] = -1;
+		APA[10] = 0;
+		APA[11] = 0;
+		APA[12] = 1;
+		APA[13] = 1;
+		APA[14] = 2;
+		APA[15] = 2;
+		APA[16] = 3;
+		APA[17] = 3;
+		APA[18] = 4;
+		/*
+		* Zählvariable
+		*/
+		let i = 0;
+		let n = 0;
+		let m = 0;
+		/*
+		* Zwischenspeichervariable
+		*/
+		let a = null;
+		let b = null;
+		let c = null;
+		let d = null;
+		let e = null;
+		let f = null;
+		
+		/*------------- Logic geht los -------------*/
+		/*
+		* e ist zum übergeben an die history
+		*/
+		e = [];
+		for(n = 0; n <= 5; n++){
+			for(i = 0; i <= 3; i++) {
+				rolls.push( randomDice()/*Ergebnis des Rolls, passiert 4 mal*/);
+			}
+			
+			b = doMath(dropLowest(rolls));
+			e[n] = b;
+			
+			/*
+			* rolls array to string in a, 
+			* dann alle "," durch ein "+" ersetzten
+			* der Inhalt der li Element wird mit den Zahlen ersetzt
+			* rolls wird für den nächsten Schleifendurchlauf zum leeren Array.
+			*/
+			a = rolls.toString();
+			a = a.replace(/,/g," + ");
+			statlist.children[n].innerHTML = a + ", drop(" + rolls[0] + ")" + " = " + b  + " (" + APA[b] + ")";
+			rolls = [];
+			
+			
+			c = c + b;
+			d = d + APA[b];
+		}
+		totalValue.innerHTML = c;
+		totalAbilityValue.innerHTML = d;
+		/*
+		* e to string 
+		* string wird lesbarer
+		*/
+		e = e.toString();
+		e = e.replace(/,/g,", ");
+		addToHistory(e, c, d);
+	}
+	
+	/* Rolling function
+	* Rollt mindestens 1x und solange number = 1 ist. (Legendary rolls Regeln, reroll 1's)
+	* Rollt nur 1 Zahl.
+	*/
+	function randomDice() {
+		let number;
+		number = Math.floor(Math.random() * 6) + 1;
+		do{
+			number = Math.floor(Math.random() * 6) + 1;
+		}while(number == 1);
+		return number;
+	}
+	
+	/* Do Math function
+	* Rechnet den Wert aus dem Array zusammen.
+	* Ignoriert dabei den ersten Wert, da Array sortiert und es sich um Legendary Rolls handelt.
+	*/
+	function doMath(array) {
+		b = 0;
+		for(i = 1; i < array.length; i++){
+			b = b + array[i];
+		}
+		return b;
+	}
+	
+	/* Drop lowest function
+	* Sortiert das Array der größe nach.
+	*/
+	function dropLowest(array) {
+		array.sort(function(a, b){return a - b});
+		return array;
+	}
+	
+	/* Roll History
+	* Erstellt die Roll History
+	* Add 1 tr to table und call addToHistoryUl
+	*/
+	function addToHistory(valueB, valueC, valueD){
+		/*
+		* newTr erstellt immer neue table rows
+		* tr ist ein array mit allen tr's
+		*/
+		var newTr = document.createElement("tr");
+		var tr = document.getElementsByClassName("roll-history");
+		/*
+		*
+		*/
+		newTr.setAttribute('class',"roll-history");
+		rollHistory.appendChild(newTr);
+		m = rollHistory.children.length - 1;
+		
+		addToHistoryTr(valueB, m);
+		addToHistoryTr(valueD, m);
+		addToHistoryTr(valueC, m);
+	}
+	/*
+	* Add 1 td to the tr
+	*/
+	function addToHistoryTr(value, num){
+		var newTd = document.createElement("td");
+		newTd.appendChild(document.createTextNode(value));
+		rollHistory.children[num].appendChild(newTd)
+	}
+	
+	/*
+	* Führt alles aus, wenn btn geklickt wird.
+	*/
+	btn.onclick = diceMagic;
+</script>
+</html>
