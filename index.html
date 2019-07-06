@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>DnD Stat Roller</title>
 	<style>
-		
 		/* Passende Farben für die Zukunft.
 		* #0e1e35
 		* #173c45
@@ -55,6 +54,12 @@
 			
 			/*DEBUGING BORDER*/
 			/*border: 1px solid black;*/
+		}
+		.content .options-caption {
+			margin-top: 15px;
+		}
+		.content input {
+			margin: 5px 0;
 		}
 		.content #statlist {
 			border-bottom: 2px solid #2d8064;
@@ -112,6 +117,9 @@
 		<div class="dice-magic">
 			<div id="btn">Dice Magic</div>
 		</div>
+		<span class="options-caption">Optional</span>
+		<input type="number" id="dice-manipulator-min" placeholder="Mindest Total-Wert (36-108)" min="36" max="108">
+		<input type="number" id="dice-manipulator-max" placeholder="Maximaler Total-Wert (36-108)" min="36" max="108">
 		<!-- History Liste einfügen -->
 		<span class="history-caption">Roll History</span>
 		<table id="roll-history">
@@ -141,17 +149,28 @@
 	const totalValue = document.getElementById("total-value");
 	const totalAbilityValue = document.getElementById("total-ability-value");
 	const rollHistory = document.getElementById("roll-history");
-	
-	function diceMagic() {
-		/*
-		* rolls ist das Array, in dem später die Werte von einem roll stehen. Es wird 6 mal überschrieben und ausgegeben.
-		*/
-		let rolls = [];
-		/*
-		* Ability Plus Array zum abgleichen.
-		* Key ist der Wert value der Abilityplus in DnD
-		*/
-		const APA = new Array();
+	const minDiceMan = document.getElementById("dice-manipulator-min");
+	const maxDiceMan = document.getElementById("dice-manipulator-max");
+	/*
+	* rolls ist das Array, in dem später die Werte von einem roll stehen. Es wird 6 mal überschrieben und ausgegeben.
+	* allValues ist das Array, in dem einfach alle Werte die zum displayed gebraucht werden drinne stehen.
+	* totalRollValue ist eine Variable in der der totale Wert von dem gerollten steht.
+	* rollValue ist eine Variable die immer wieder mit dem Value von einem Roll überschrieben und ausgegeben wird.
+	* rollValueHistory ist ein array, das 6 mal den rollValue speichert.
+	* rollString ist für die schöne ausgabe der rolls.
+	*/
+	var rolls = [];
+	var allValues = [];
+	var totalRollValue = 0;
+	var rollValue = 0;
+	var rollValueHistory = [];
+	var rollString;
+	var totalAbilityPlusValue = 0;
+	/*
+	* APA = Ability Plus Array zum abgleichen.
+	* Key ist der Wert value der Abilityplus in DnD
+	*/
+	const APA = new Array();
 		APA[1] = -5;
 		APA[2] = -4;
 		APA[3] = -4;
@@ -170,59 +189,96 @@
 		APA[16] = 3;
 		APA[17] = 3;
 		APA[18] = 4;
-		/*
-		* Zählvariable
-		*/
-		let i = 0;
-		let n = 0;
-		let m = 0;
-		/*
-		* Zwischenspeichervariable
-		*/
-		let a = null;
-		let b = null;
-		let c = null;
-		let d = null;
-		let e = null;
-		let f = null;
+	/*
+	* Zählvariable
+	*/
+	var i = 0;
+	var n = 0;
+	var m = 0;
+	/*
+	* Zwischenspeichervariable
+	*/
+	var a;
+	var b;
+	
+	function diceMagic() {
+		totalRollValue = 0;
+		getAllValues();
 		
-		/*------------- Logic geht los -------------*/
-		/*
-		* e ist zum übergeben an die history
-		*/
-		e = [];
-		for(n = 0; n <= 5; n++){
-			for(i = 0; i <= 3; i++) {
-				rolls.push( randomDice()/*Ergebnis des Rolls, passiert 4 mal*/);
+		if(minDiceMan.value >= 36){
+			if(minDiceMan.value <= 108){
+				do{
+					getAllValues();
+				}while(minDiceMan.value > totalRollValue);
+				console.log("Sollte funktioniert haben");
 			}
-			
-			b = doMath(dropLowest(rolls));
-			e[n] = b;
-			
-			/*
-			* rolls array to string in a, 
-			* dann alle "," durch ein "+" ersetzten
-			* der Inhalt der li Element wird mit den Zahlen ersetzt
-			* rolls wird für den nächsten Schleifendurchlauf zum leeren Array.
-			*/
-			a = rolls.toString();
-			a = a.replace(/,/g," + ");
-			statlist.children[n].innerHTML = a + ", drop(" + rolls[0] + ")" + " = " + b  + " (" + APA[b] + ")";
-			rolls = [];
-			
-			
-			c = c + b;
-			d = d + APA[b];
 		}
-		totalValue.innerHTML = c;
-		totalAbilityValue.innerHTML = d;
+		
+		if(maxDiceMan.value >= 36){
+			if(maxDiceMan.value <= 108){
+				do{
+					getAllValues();
+				}while(maxDiceMan.value < totalRollValue);
+				console.log("Hat vielleicht funktioniert");
+			}
+		}	
+		console.log("One done");
+		displayValues();
+	}
+	
+	
+	
+	function displayValues() {
 		/*
-		* e to string 
-		* string wird lesbarer
+		* Reset Variable
 		*/
-		e = e.toString();
-		e = e.replace(/,/g,", ");
-		addToHistory(e, c, d);
+		totalAbilityPlusValue = 0;
+		for(n = 0; n <= 5; n++){
+			/*
+			* muss roll Value jedes mal resetten.
+			*/
+			rollValue = 0;
+			for(i = 1; i <= 3; i++){
+				rollValue = rollValue + allValues[n][i];
+			}
+			/*
+			* für die Ausgabe wird der string aus dem array erstellt und verschönert.
+			*/
+			rollString = allValues[n].toString();
+			rollString = rollString.replace(/,/g," + ");
+			totalAbilityPlusValue = totalAbilityPlusValue + APA[rollValue];
+			
+			rollValueHistory[n] = rollValue;
+			
+			statlist.children[n].innerHTML =  rollString + ", drop(" + allValues[n][0] + ")" + " = " + rollValue  + " (" + APA[rollValue] + ")";
+		}
+		totalValue.innerHTML = totalRollValue;
+		totalAbilityValue.innerHTML = totalAbilityPlusValue;
+		addToHistory(rollString, totalAbilityPlusValue, totalRollValue);
+	}
+	
+	function getAllValues() {
+		/*
+		* Reset der Variablen
+		*/
+		allValues = [];
+		rolls = [];
+		totalRollValue = 0;
+		for(n = 0; n <= 5; n++){
+			for(i = 0; i <= 3; i++){
+				rolls.push(randomDice());
+				//console.log(rolls);
+			}
+			/*
+			* rolls wird aufsteigend sortiert
+			* all Values wird mit 6 rolls befüllt
+			*/
+			rolls = sortAsc(rolls);
+			allValues[n] = rolls;
+			rolls = [];
+			totalRollValue = totalRollValue + doMath(allValues[n]);
+			
+		}
 	}
 	
 	/* Rolling function
@@ -253,7 +309,7 @@
 	/* Drop lowest function
 	* Sortiert das Array der größe nach.
 	*/
-	function dropLowest(array) {
+	function sortAsc(array) {
 		array.sort(function(a, b){return a - b});
 		return array;
 	}
@@ -262,10 +318,13 @@
 	* Erstellt die Roll History
 	* Add 1 tr to table und call addToHistoryUl
 	*/
-	function addToHistory(valueB, valueC, valueD){
+	function addToHistory(valueA, valueB, valueC){
 		/*
 		* newTr erstellt immer neue table rows
 		* tr ist ein array mit allen tr's
+		* valueA = gewürfelte werte
+		* valueB = total ability plus
+		* valueC = total
 		*/
 		var newTr = document.createElement("tr");
 		var tr = document.getElementsByClassName("roll-history");
@@ -276,8 +335,8 @@
 		rollHistory.appendChild(newTr);
 		m = rollHistory.children.length - 1;
 		
+		addToHistoryTr(valueA, m);
 		addToHistoryTr(valueB, m);
-		addToHistoryTr(valueD, m);
 		addToHistoryTr(valueC, m);
 	}
 	/*
