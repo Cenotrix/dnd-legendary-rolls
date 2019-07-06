@@ -21,9 +21,6 @@
 			color: #0e1e35;
 			font-size: 24px;
 		}
-		body {
-			
-		}
 		header {
 			display: flex;
 			flex-direction: column;
@@ -90,6 +87,15 @@
 			position: fixed;
 			bottom: 0;
 		}
+		.noselect {
+		  -webkit-touch-callout: none; /* iOS Safari */
+			-webkit-user-select: none; /* Safari */
+			 -khtml-user-select: none; /* Konqueror HTML */
+			   -moz-user-select: none; /* Firefox */
+				-ms-user-select: none; /* Internet Explorer/Edge */
+					user-select: none; /* Non-prefixed version, currently
+										  supported by Chrome and Opera */
+		}
 	</style>
 </head>
 
@@ -115,10 +121,10 @@
 		<p id="total-ability-value">0</p>
 		
 		<div class="dice-magic">
-			<div id="btn">Dice Magic</div>
+			<div class="noselect" id="btn">Dice Magic</div>
 		</div>
 		<span class="options-caption">Optional</span>
-		<input type="number" id="dice-manipulator-min" placeholder="Minimal Total-Wert (36-108)" min="36" max="108">
+		<input type="number" id="dice-manipulator-min" placeholder="Mindest Total-Wert (36-108)" min="36" max="108">
 		<input type="number" id="dice-manipulator-max" placeholder="Maximaler Total-Wert (36-108)" min="36" max="108">
 		<!-- History Liste einfügen -->
 		<span class="history-caption">Roll History</span>
@@ -205,24 +211,29 @@
 		totalRollValue = 0;
 		getAllValues();
 		
-		if(minDiceMan.value >= 36){
-			if(minDiceMan.value <= 108){
+		if(maxDiceMan.value >= 36 && minDiceMan.value >= 36){
+			if(maxDiceMan.value <= 108 && minDiceMan.value <= 108){
 				do{
 					getAllValues();
-				}while(minDiceMan.value > totalRollValue);
-				console.log("Sollte funktioniert haben");
+				}while(totalRollValue > maxDiceMan.value && totalRollValue < minDiceMan.value);
+			}
+		}else {
+			if(minDiceMan.value >= 36){
+				if(minDiceMan.value <= 108){
+					do{
+						getAllValues();
+					}while(totalRollValue < minDiceMan.value);
+				}
+			}else{
+				if(maxDiceMan.value >= 36){
+					if(maxDiceMan.value <= 108){
+						do{
+							getAllValues();
+						}while(totalRollValue > maxDiceMan.value);
+					}
+				}
 			}
 		}
-		
-		if(maxDiceMan.value >= 36){
-			if(maxDiceMan.value <= 108){
-				do{
-					getAllValues();
-				}while(maxDiceMan.value < totalRollValue);
-				console.log("Hat vielleicht funktioniert");
-			}
-		}	
-		console.log("One done");
 		displayValues();
 	}
 	
