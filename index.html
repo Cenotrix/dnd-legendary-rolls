@@ -254,6 +254,8 @@
 		}
 		totalValue.innerHTML = totalRollValue;
 		totalAbilityValue.innerHTML = totalAbilityPlusValue;
+		rollString = rollValueHistory.toString();
+		rollString = rollString.replace(/,/g," + ");
 		addToHistory(rollString, totalAbilityPlusValue, totalRollValue);
 	}
 	
