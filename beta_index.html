@@ -47,6 +47,7 @@
 			justify-content: center;
 			text-align: center;
 			width: 90%;
+			max-width: 1440px;
 			margin: 0 auto;
 			
 			/*DEBUGING BORDER*/
@@ -238,7 +239,7 @@
 		* Die if <= 108 sind checks, ob der maximale Wert von 108 (6*18) nicht überschritten wird.
 		* Die sind beim max Dice eig. überflüssig, da er nicht über 108 kommen kann.
 		*/
-		if(maxDiceMan.value >= 36 && minDiceMan.value >= 36){
+		if(maxDiceMan.value >= 36 && minDiceMan.value >= 36 && maxDiceMan.value > minDiceMan.value){
 			if(maxDiceMan.value <= 108 && minDiceMan.value <= 108){
 				do{
 					getAllValues();
@@ -368,7 +369,6 @@
 			allValues[n] = rolls;
 			rolls = [];
 			totalRollValue = totalRollValue + doMath(allValues[n]);
-			
 		}
 	}
 	
