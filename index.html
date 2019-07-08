@@ -46,7 +46,7 @@
 			align-content: center;
 			justify-content: center;
 			text-align: center;
-			width: 80%;
+			width: 90%;
 			margin: 0 auto;
 			
 			/*DEBUGING BORDER*/
@@ -66,7 +66,7 @@
 			margin-top: 35px;
 		}
 		.content #roll-history {
-			width: 60%;
+			width: 80%;
 			margin: 0 auto 35px auto;
 		}
 		.content .dice-magic {
@@ -208,14 +208,29 @@
 	var b;
 	
 	function diceMagic() {
-		totalRollValue = 0;
+		/*
+		* Die function fängt damit an sich einmal alles zu erwürfeln
+		* sollten die min / max nicht gegeben sein passiert nichts weiter.
+		*/
 		getAllValues();
 		
+		/* Die if's
+		* Die if >= 36 sind checks, ob der mindest Wert von 36 (6*6) gegeben ist.
+		* Die sind beim min Dice eig. überflüssig, da er immer auf über 36 kommt.
+		* Die if <= 108 sind checks, ob der maximale Wert von 108 (6*18) nicht überschritten wird.
+		* Die sind beim max Dice eig. überflüssig, da er nicht über 108 kommen kann.
+		*/
 		if(maxDiceMan.value >= 36 && minDiceMan.value >= 36){
 			if(maxDiceMan.value <= 108 && minDiceMan.value <= 108){
 				do{
 					getAllValues();
-				}while(totalRollValue > maxDiceMan.value && totalRollValue < minDiceMan.value);
+				}while(totalRollValue > maxDiceMan.value || totalRollValue < minDiceMan.value);
+				/*
+				+ Wenn der gewürfelte Wert über dem eingegebenen max. Wert liegt 
+				* ODER
+				* wenn der gewürfelte Wert unter dem eingegebenen min. Wert liegt
+				* werden 6 neue Werte gewürfelt.
+				*/
 			}
 		}else {
 			if(minDiceMan.value >= 36){
@@ -223,6 +238,10 @@
 					do{
 						getAllValues();
 					}while(totalRollValue < minDiceMan.value);
+					/*
+					* Wenn der gewürfelte Wert unter dem eingegebenen min. Wert liegt
+					* werden 6 neue Werte gewürfelt.
+					*/
 				}
 			}else{
 				if(maxDiceMan.value >= 36){
@@ -230,10 +249,17 @@
 						do{
 							getAllValues();
 						}while(totalRollValue > maxDiceMan.value);
+						/*
+						* Wenn der gewürfelte Wert über dem eingegebenen max. Wert liegt
+						* werden 6 neue Werte gewürfelt.
+						*/
 					}
 				}
 			}
 		}
+		/*
+		* Sollte alles soweit gecheckt sein(if's und else's) werden die Werte angezeigt.
+		*/
 		displayValues();
 	}
 	
@@ -257,14 +283,25 @@
 			*/
 			rollString = allValues[n].toString();
 			rollString = rollString.replace(/,/g," + ");
+			//Total Ability Plus Value wird ausgerechnet
 			totalAbilityPlusValue = totalAbilityPlusValue + APA[rollValue];
 			
 			rollValueHistory[n] = rollValue;
-			
+			/* Beispielausgabe: 2 + 4 + 4 + 5, drop(2) = 13 (1)
+			* rollString = 2 + 4 + 4 + 5,
+			* allValues[n][0] = 2,
+			* rollValue = 13,
+			* APA[rollValue] = 1
+			*/
 			statlist.children[n].innerHTML =  rollString + ", drop(" + allValues[n][0] + ")" + " = " + rollValue  + " (" + APA[rollValue] + ")";
 		}
+		// Anzeige des Total-Wert
 		totalValue.innerHTML = totalRollValue;
+		//Anzeige des Total Ability Plus-Wert
 		totalAbilityValue.innerHTML = totalAbilityPlusValue;
+		/*
+		* Für die Roll History müssen einige Werte übergeben werden. diese werden in die Variablen geschrieben, wenn es sie noch nicht gibt
+		*/
 		rollString = rollValueHistory.toString();
 		rollString = rollString.replace(/,/g," + ");
 		addToHistory(rollString, totalAbilityPlusValue, totalRollValue);
