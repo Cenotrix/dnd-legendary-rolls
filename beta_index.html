@@ -124,6 +124,7 @@
 			<div class="noselect" id="btn">Dice Magic</div>
 		</div>
 		<span class="options-caption">Optional</span>
+		<input type="number" id="multi-char-roll" placeholder="Wie viele Charaktere? Wenn nichts ausgewählt 1.">
 		<input type="number" id="dice-manipulator-min" placeholder="Mindest Total-Wert (36-108)" min="36" max="108">
 		<input type="number" id="dice-manipulator-max" placeholder="Maximaler Total-Wert (36-108)" min="36" max="108">
 		<!-- History Liste einfügen -->
@@ -150,6 +151,16 @@
 	</footer>
 </body>
 <script>
+	/*
+	* btn ist das Div, auf das man zum starten klicken kann
+	* statlist ist die ul, in der die Werte angezeigt werden, zuerst sind 6 * <li>0</li> in ihr
+	* totalValue ist das p unter dem p mit "Total" als inhalt
+	* totalAbilityValue ist das p unter dem p mit "Total Ability Plus" als inhalt
+	* rollHistory ist der table, der zu Beginn nur die Aufteilung hat.
+	* minDiceMan ist das Inputfeld für den minimal Wert
+	* maxDiceMan ist das Inputfeld für den maximal Wert
+	* multiChar ist das Inputfeld für die Anzahl der Charaktere die gerollt werden sollen.
+	*/
 	const btn = document.getElementById("btn");
 	const statlist = document.getElementById("statlist");
 	const totalValue = document.getElementById("total-value");
@@ -157,6 +168,7 @@
 	const rollHistory = document.getElementById("roll-history");
 	const minDiceMan = document.getElementById("dice-manipulator-min");
 	const maxDiceMan = document.getElementById("dice-manipulator-max");
+	const multiChar = document.getElementById("multi-char-roll");
 	/*
 	* rolls ist das Array, in dem später die Werte von einem roll stehen. Es wird 6 mal überschrieben und ausgegeben.
 	* allValues ist das Array, in dem einfach alle Werte die zum displayed gebraucht werden drinne stehen.
@@ -172,6 +184,7 @@
 	var rollValueHistory = [];
 	var rollString;
 	var totalAbilityPlusValue = 0;
+	var multiCharValue = 0;
 	/*
 	* APA = Ability Plus Array zum abgleichen.
 	* Key ist der Wert value der Abilityplus in DnD
@@ -207,13 +220,18 @@
 	var a;
 	var b;
 	
+	
+	/* diceMagic function
+	* führt die meisten functions zusammen
+	* checkt ob die min/max Total Werte stimmen, sonst rerollt.
+	*/
 	function diceMagic() {
 		/*
 		* Die function fängt damit an sich einmal alles zu erwürfeln
 		* sollten die min / max nicht gegeben sein passiert nichts weiter.
 		*/
 		getAllValues();
-		
+
 		/* Die if's
 		* Die if >= 36 sind checks, ob der mindest Wert von 36 (6*6) gegeben ist.
 		* Die sind beim min Dice eig. überflüssig, da er immer auf über 36 kommt.
@@ -263,8 +281,27 @@
 		displayValues();
 	}
 	
+	/* executeMagic function
+	* führt die diceMagic function multiChar.value oft aus.
+	* wenn kein multiChar.value gegeben ist, nur 1 mal
+	*/
+	function executeMagic(){
+		if(multiChar.value > 0){
+			multiCharValue = multiChar.value -1;
+		}else{
+			multiCharValue = 0;
+		}
+		do{
+			diceMagic();
+			multiCharValue = multiCharValue - 1;
+		}while(multiCharValue > 0);
+	}
 	
-	
+	/* displayValues function
+	* Ändert die innerHTML von der statlist
+	* Verschönert die Anzeige
+	* Gibt die richtigen Werte and addToHistory weiter
+	*/
 	function displayValues() {
 		/*
 		* Reset Variable
@@ -307,6 +344,10 @@
 		addToHistory(rollString, totalAbilityPlusValue, totalRollValue);
 	}
 	
+	/* getAllValues function
+	* allValues wird mit 6 Array's mit 4 Zahlen gefüllt.
+	* totalRollValue wird ausgerechnet
+	*/
 	function getAllValues() {
 		/*
 		* Reset der Variablen
@@ -389,7 +430,8 @@
 		addToHistoryTr(valueB, m);
 		addToHistoryTr(valueC, m);
 	}
-	/*
+	
+	/* addToHistory function
 	* Add 1 td to the tr
 	*/
 	function addToHistoryTr(value, num){
@@ -401,6 +443,6 @@
 	/*
 	* Führt alles aus, wenn btn geklickt wird.
 	*/
-	btn.onclick = diceMagic;
+	btn.onclick = executeMagic;
 </script>
 </html>
