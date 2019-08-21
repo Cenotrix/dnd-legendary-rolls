@@ -100,7 +100,6 @@
 		<span class="caption">Look no further</span>
 	</header>
 	<div class="content">
-		
 		<ul id="statlist">
 			<li>0</li>
 			<li>0</li>
@@ -109,12 +108,10 @@
 			<li>0</li>
 			<li>0</li>
 		</ul>
-		
 		<p>Total</p>
 		<p id="total-value">0</p>
 		<p>Total Ability Plus</p>
 		<p id="total-ability-value">0</p>
-		
 		<div class="dice-magic">
 			<div class="noselect" id="btn">Dice Magic</div>
 		</div>
@@ -122,7 +119,6 @@
 		<input type="number" id="multi-char-roll" placeholder="Wie viele Charaktere? Wenn nichts ausgewählt 1.">
 		<input type="number" id="dice-manipulator-min" placeholder="Mindest Total-Wert (36-108)" min="36" max="108">
 		<input type="number" id="dice-manipulator-max" placeholder="Maximaler Total-Wert (36-108)" min="36" max="108">
-		
 		<span class="history-caption">Roll History</span>
 		<table id="roll-history">
 			<thead>
@@ -131,15 +127,8 @@
 					<th class="caption">Total Ability Plus</th>
 					<th class="caption">Total</th>
 				</tr>
-			</thead>
-			<tbody>
-				
-			</tbody>
-			
-			
-
+            </thead>
 		</table>
-		
 	</div>
 	<footer>
 		<h6>Made by Matthias :)</h6>
@@ -180,29 +169,6 @@
 	var rollString;
 	var totalAbilityPlusValue = 0;
 	var multiCharValue = 0;
-	/*
-	* APA = Ability Plus Array zum abgleichen.
-	* Key ist der Wert value der Abilityplus in DnD
-	*/
-	const APA = new Array();
-		APA[1] = -5;
-		APA[2] = -4;
-		APA[3] = -4;
-		APA[4] = -3;
-		APA[5] = -3;
-		APA[6] = -2;
-		APA[7] = -2;
-		APA[8] = -1;
-		APA[9] = -1;
-		APA[10] = 0;
-		APA[11] = 0;
-		APA[12] = 1;
-		APA[13] = 1;
-		APA[14] = 2;
-		APA[15] = 2;
-		APA[16] = 3;
-		APA[17] = 3;
-		APA[18] = 4;
 	/*
 	* Zählvariable
 	*/
@@ -315,16 +281,16 @@
 			rollString = allValues[n].toString();
 			rollString = rollString.replace(/,/g," + ");
 			//Total Ability Plus Value wird ausgerechnet
-			totalAbilityPlusValue = totalAbilityPlusValue + APA[rollValue];
+			totalAbilityPlusValue = totalAbilityPlusValue + getAPM(rollValue);
 			
 			rollValueHistory[n] = rollValue;
 			/* Beispielausgabe: 2 + 4 + 4 + 5, drop(2) = 13 (1)
 			* rollString = 2 + 4 + 4 + 5,
 			* allValues[n][0] = 2,
 			* rollValue = 13,
-			* APA[rollValue] = 1
+			* getAPM(rollValue) = 1
 			*/
-			statlist.children[n].innerHTML =  rollString + ", drop(" + allValues[n][0] + ")" + " = " + rollValue  + " (" + APA[rollValue] + ")";
+			statlist.children[n].innerHTML =  rollString + ", drop(" + allValues[n][0] + ")" + " = " + rollValue  + " (" + getAPM(rollValue) + ")";
 		}
 		// Anzeige des Total-Wert
 		totalValue.innerHTML = totalRollValue;
@@ -432,8 +398,14 @@
 		newTd.appendChild(document.createTextNode(value));
 		rollHistory.children[num].appendChild(newTd)
 	}
-	
-	
+    
+	/*
+	* APM = Ability Plus Math zum ausrechnen des Ability Score Imporves.
+	*/
+	function getAPM(rollValue){
+        var APM = Math.floor((rollValue - 10) / 2);
+        return APM;
+    }
 	
 	/*
 	* Führt alles aus, wenn btn geklickt wird.
