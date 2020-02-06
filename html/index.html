@@ -30,9 +30,6 @@
 			margin-bottom: 15px;
 			background: #295a56;
 			padding: 15px;
-			
-			/*DEBUGING BORDER*/
-			/*border: 1px solid red;*/
 		}
 		header h1, header .caption, .content .dice-magic #btn {
 			color: #fff;
@@ -47,10 +44,8 @@
 			justify-content: center;
 			text-align: center;
 			width: 90%;
+			max-width: 1440px;
 			margin: 0 auto;
-			
-			/*DEBUGING BORDER*/
-			/*border: 1px solid black;*/
 		}
 		.content .options-caption {
 			margin-top: 15px;
@@ -102,7 +97,6 @@
 		<span class="caption">Look no further</span>
 	</header>
 	<div class="content">
-		
 		<ul id="statlist">
 			<li>0</li>
 			<li>0</li>
@@ -111,12 +105,10 @@
 			<li>0</li>
 			<li>0</li>
 		</ul>
-		
 		<p>Total</p>
 		<p id="total-value">0</p>
 		<p>Total Ability Plus</p>
 		<p id="total-ability-value">0</p>
-		
 		<div class="dice-magic">
 			<div class="noselect" id="btn">Dice Magic</div>
 		</div>
@@ -124,7 +116,6 @@
 		<input type="number" id="multi-char-roll" placeholder="Wie viele Charaktere? Wenn nichts ausgewählt 1.">
 		<input type="number" id="dice-manipulator-min" placeholder="Mindest Total-Wert (36-108)" min="36" max="108">
 		<input type="number" id="dice-manipulator-max" placeholder="Maximaler Total-Wert (36-108)" min="36" max="108">
-		<!-- History Liste einfügen -->
 		<span class="history-caption">Roll History</span>
 		<table id="roll-history">
 			<thead>
@@ -133,15 +124,8 @@
 					<th class="caption">Total Ability Plus</th>
 					<th class="caption">Total</th>
 				</tr>
-			</thead>
-			<tbody>
-				
-			</tbody>
-			
-			
-
+            </thead>
 		</table>
-		
 	</div>
 	<footer>
 		<h6>Made by Matthias :)</h6>
@@ -183,29 +167,6 @@
 	var totalAbilityPlusValue = 0;
 	var multiCharValue = 0;
 	/*
-	* APA = Ability Plus Array zum abgleichen.
-	* Key ist der Wert value der Abilityplus in DnD
-	*/
-	const APA = new Array();
-		APA[1] = -5;
-		APA[2] = -4;
-		APA[3] = -4;
-		APA[4] = -3;
-		APA[5] = -3;
-		APA[6] = -2;
-		APA[7] = -2;
-		APA[8] = -1;
-		APA[9] = -1;
-		APA[10] = 0;
-		APA[11] = 0;
-		APA[12] = 1;
-		APA[13] = 1;
-		APA[14] = 2;
-		APA[15] = 2;
-		APA[16] = 3;
-		APA[17] = 3;
-		APA[18] = 4;
-	/*
 	* Zählvariable
 	*/
 	var i = 0;
@@ -217,12 +178,27 @@
 	var a;
 	var b;
 	
+	/* executeEverything function
+	* führt die diceMaster function multiChar.value oft aus.
+	* wenn kein multiChar.value gegeben ist, nur 1 mal
+	*/
+	function executeEverything(){
+		if(multiChar.value > 0){
+			multiCharValue = multiChar.value -1;
+		}else{
+			multiCharValue = 0;
+		}
+		do{
+			diceMaster();
+			multiCharValue = multiCharValue - 1;
+		}while(multiCharValue > 0);
+	}
 	
-	/* diceMagic function
+	/* diceMaster function
 	* führt die meisten functions zusammen
 	* checkt ob die min/max Total Werte stimmen, sonst rerollt.
 	*/
-	function diceMagic() {
+	function diceMaster() {
 		/*
 		* Die function fängt damit an sich einmal alles zu erwürfeln
 		* sollten die min / max nicht gegeben sein passiert nichts weiter.
@@ -235,7 +211,7 @@
 		* Die if <= 108 sind checks, ob der maximale Wert von 108 (6*18) nicht überschritten wird.
 		* Die sind beim max Dice eig. überflüssig, da er nicht über 108 kommen kann.
 		*/
-		if(maxDiceMan.value >= 36 && minDiceMan.value >= 36){
+		if(maxDiceMan.value >= 36 && minDiceMan.value >= 36 && (maxDiceMan.value + 1) > minDiceMan.value){
 			if(maxDiceMan.value <= 108 && minDiceMan.value <= 108){
 				do{
 					getAllValues();
@@ -278,22 +254,6 @@
 		displayValues();
 	}
 	
-	/* executeMagic function
-	* führt die diceMagic function multiChar.value oft aus.
-	* wenn kein multiChar.value gegeben ist, nur 1 mal
-	*/
-	function executeMagic(){
-		if(multiChar.value > 0){
-			multiCharValue = multiChar.value -1;
-		}else{
-			multiCharValue = 0;
-		}
-		do{
-			diceMagic();
-			multiCharValue = multiCharValue - 1;
-		}while(multiCharValue > 0);
-	}
-	
 	/* displayValues function
 	* Ändert die innerHTML von der statlist
 	* Verschönert die Anzeige
@@ -318,16 +278,16 @@
 			rollString = allValues[n].toString();
 			rollString = rollString.replace(/,/g," + ");
 			//Total Ability Plus Value wird ausgerechnet
-			totalAbilityPlusValue = totalAbilityPlusValue + APA[rollValue];
+			totalAbilityPlusValue = totalAbilityPlusValue + getAPM(rollValue);
 			
 			rollValueHistory[n] = rollValue;
 			/* Beispielausgabe: 2 + 4 + 4 + 5, drop(2) = 13 (1)
 			* rollString = 2 + 4 + 4 + 5,
 			* allValues[n][0] = 2,
 			* rollValue = 13,
-			* APA[rollValue] = 1
+			* getAPM(rollValue) = 1
 			*/
-			statlist.children[n].innerHTML =  rollString + ", drop(" + allValues[n][0] + ")" + " = " + rollValue  + " (" + APA[rollValue] + ")";
+			statlist.children[n].innerHTML =  rollString + ", drop(" + allValues[n][0] + ")" + " = " + rollValue  + " (" + getAPM(rollValue) + ")";
 		}
 		// Anzeige des Total-Wert
 		totalValue.innerHTML = totalRollValue;
@@ -364,8 +324,7 @@
 			rolls = sortAsc(rolls);
 			allValues[n] = rolls;
 			rolls = [];
-			totalRollValue = totalRollValue + doMath(allValues[n]);
-			
+			totalRollValue = totalRollValue + addTotalRollValue(allValues[n]);
 		}
 	}
 	
@@ -382,11 +341,11 @@
 		return number;
 	}
 	
-	/* Do Math function
+	/* addTotalRollValue function
 	* Rechnet den Wert aus dem Array zusammen.
 	* Ignoriert dabei den ersten Wert, da Array sortiert und es sich um Legendary Rolls handelt.
 	*/
-	function doMath(array) {
+	function addTotalRollValue(array) {
 		b = 0;
 		for(i = 1; i < array.length; i++){
 			b = b + array[i];
@@ -436,10 +395,18 @@
 		newTd.appendChild(document.createTextNode(value));
 		rollHistory.children[num].appendChild(newTd)
 	}
+    
+	/*
+	* APM = Ability Plus Math zum ausrechnen des Ability Score Imporves.
+	*/
+	function getAPM(rollValue){
+        var APM = Math.floor((rollValue - 10) / 2);
+        return APM;
+    }
 	
 	/*
 	* Führt alles aus, wenn btn geklickt wird.
 	*/
-	btn.onclick = executeMagic;
+	btn.onclick = executeEverything;
 </script>
 </html>
