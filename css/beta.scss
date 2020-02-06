@@ -1,0 +1,97 @@
+/* Passende Farben für die Zukunft.
+* #0e1e35
+* #173c45
+* #295a56
+* #2d8064
+* #a7ce97
+* #fff
+*/
+
+$lightFontColor: #fff;
+$backgroundColor: #295a56;
+$elementMargin: 15px;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+    font-weight: 400;
+    color: #0e1e35;
+    font-size: 24px;
+}
+        
+body {
+
+    header {
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        justify-content: center;
+        text-align: center;
+        background: $backgroundColor;
+        padding: 15px;
+
+        h1 {
+            color: $lightFontColor;
+        }
+
+        .caption {
+            color: $lightFontColor;
+            font-size: 18px;
+        }
+    }
+    main {
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        justify-content: center;
+        text-align: center;
+        width: 90%;
+        max-width: 1440px;
+        margin: 0 auto;
+
+        .dice-magic {
+            margin-top: $elementMargin;
+
+            #btn {
+                color: $lightFontColor;
+                background: $backgroundColor;
+                padding: 5px;
+                display: inline;
+                text-align: center;
+                cursor: pointer;
+            }
+        }
+
+        input {
+            margin: 5px 0;
+        }
+
+        #statlist {
+            margin: $elementMargin;
+            list-style: none;
+        }
+
+        .history-caption{
+            margin-top: $elementMargin;
+        }
+
+        #roll-history {
+            width: 80%;
+            margin: 0 auto 35px auto;
+        }
+
+        .options-caption {
+            margin-top: $elementMargin;
+        }
+    }
+    footer {
+
+        h6 {
+            font-size: 14px;
+            position: fixed;
+            bottom: 0;
+        }
+    }
+}
