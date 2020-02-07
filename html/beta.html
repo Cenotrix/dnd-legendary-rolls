@@ -7,11 +7,16 @@
 	</head>
 
 	<body>
+
 		<header>
+
 			<h1>Easy Peasy DnD Charaktere erstellen?</h1>
 			<span class="caption">Look no further</span>
+
 		</header>
+
 		<main class="content">
+
 			<ul id="statlist">
 				<li>0</li>
 				<li>0</li>
@@ -20,31 +25,44 @@
 				<li>0</li>
 				<li>0</li>
 			</ul>
-			<p>Total</p>
-			<p id="total-value">0</p>
-			<p>Total Ability Plus</p>
-			<p id="total-ability-value">0</p>
-			<div class="dice-magic">
-				<div class="noselect" id="btn">Dice Magic</div>
+
+			<div class="value-display">
+				<p>Total</p>
+				<p id="total-value">0</p>
+				<p>Total Ability Plus</p>
+				<p id="total-ability-value">0</p>
 			</div>
-			<span class="options-caption">Optional</span>
-			<input type="number" id="multi-char-roll" placeholder="Wie viele Charaktere? Wenn nichts ausgewählt 1.">
-			<input type="number" id="dice-manipulator-min" placeholder="Mindest Total-Wert (36-108)" min="36" max="108">
-			<input type="number" id="dice-manipulator-max" placeholder="Maximaler Total-Wert (36-108)" min="36" max="108">
-			<span class="history-caption">Roll History</span>
-			<table id="roll-history">
-				<thead>
-					<tr>
-						<th class="caption">Gewürfelte Werte</th>
-						<th class="caption">Total Ability Plus</th>
-						<th class="caption">Total</th>
-					</tr>
-				</thead>
-			</table>
+
+			<div class="dice-magic noselect">
+				<button class="noselect" id="btn">Dice Magic</button>
+			</div>
+
+			<div class="option-wrapper">
+				<p class="options-caption">Optional</p>
+				<input type="number" id="multi-char-roll" placeholder="Wie viele Charaktere? Wenn nichts ausgewählt 1.">
+				<input type="number" id="dice-manipulator-min" placeholder="Mindest Total-Wert (36-108)" min="36" max="108">
+				<input type="number" id="dice-manipulator-max" placeholder="Maximaler Total-Wert (36-108)" min="36" max="108">
+			</div>
+			
+			<div class="history-wrapper">
+				<p class="history-caption">Roll History</p>
+				<table id="roll-history">
+					<thead>
+						<tr>
+							<th class="caption">Gewürfelte Werte</th>
+							<th class="caption">Total Ability Plus</th>
+							<th class="caption">Total</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+
 		</main>
+
 		<footer>
 			<h6>Made by Matthias :)</h6>
 		</footer>
+
 	</body>
 	<script src="../script/beta.js"></script>
 </html>

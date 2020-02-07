@@ -7,9 +7,60 @@
 * #fff
 */
 
+/**
+* Darkmode Colors
+*/
+/*
+$background: #2a2a2a;
+$normalFontColor: #38b2ac;
+$placeholderFontColor: #a2a2a2;
+$normalFontSize: 18px;
+*/
+/**
+* End of Darkmode Colors
+*/
+
+%insetBoxShadow {
+    box-shadow: inset -2px -2px 6px #fff, 
+                inset 2px 2px 6px #a3b1c6;
+}
+%BoxShadow {
+    box-shadow: -4px -4px 9px #fff,
+                4px 4px 9px #a3b1c6;
+}
+
+
+$backgroundColor: #e0e5ec;
 $lightFontColor: #fff;
-$backgroundColor: #295a56;
+$darkFontColor: #333;
+$smallFontSize: 14px;
+$normalFontSize: 18px;
+$elementPadding: 5px 15px;
 $elementMargin: 15px;
+
+%NeumorphElement {
+    @extend %BoxShadow;
+
+    background: $backgroundColor;
+    color: $darkFontColor;
+    font-size: $normalFontSize;
+    padding: $elementPadding;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+}
+
+%insetNeumorphElement {
+    @extend %insetBoxShadow;
+
+    background: $backgroundColor;
+    color: $darkFontColor;
+    font-size: $normalFontSize;
+    padding: $elementPadding;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+}
 
 * {
     margin: 0;
@@ -22,22 +73,23 @@ $elementMargin: 15px;
 }
         
 body {
-
+    background: $backgroundColor;
+        
     header {
+        @extend %NeumorphElement;
+
         display: flex;
         flex-direction: column;
         align-content: center;
         justify-content: center;
         text-align: center;
-        background: $backgroundColor;
-        padding: 15px;
 
         h1 {
-            color: $lightFontColor;
+            color: $darkFontColor;
         }
 
         .caption {
-            color: $lightFontColor;
+            color: $darkFontColor;
             font-size: 18px;
         }
     }
@@ -51,40 +103,78 @@ body {
         max-width: 1440px;
         margin: 0 auto;
 
+        #statlist {
+            margin-top: $elementMargin;
+            margin-bottom: $elementMargin;
+            list-style: none;
+        }
+
+        .value-display {
+            @extend %insetNeumorphElement;
+        }
+
         .dice-magic {
             margin-top: $elementMargin;
+            margin-bottom: $elementMargin;
 
             #btn {
-                color: $lightFontColor;
+                @extend %NeumorphElement;
+
+                color: $darkFontColor;
                 background: $backgroundColor;
                 padding: 5px;
                 display: inline;
                 text-align: center;
                 cursor: pointer;
+
+                &:active {
+                    @extend %insetBoxShadow;
+                }
             }
         }
 
-        input {
-            margin: 5px 0;
+        .option-wrapper {
+
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            justify-content: center;
+            text-align: center;
+
+            .options-caption {
+                @extend %NeumorphElement;
+
+                margin-top: $elementMargin;
+            }
+
+            input {
+                @extend %insetNeumorphElement;
+    
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
         }
 
-        #statlist {
-            margin: $elementMargin;
-            list-style: none;
+        .history-wrapper {
+
+            .history-caption{
+                @extend %NeumorphElement;
+
+                margin-top: $elementMargin;
+                margin-bottom: $elementMargin;
+            }
+    
+            #roll-history {
+                @extend %insetNeumorphElement;
+
+                margin-top: $elementMargin;
+                margin-bottom: $elementMargin;
+                width: 100%;
+            }
         }
 
-        .history-caption{
-            margin-top: $elementMargin;
-        }
+        
 
-        #roll-history {
-            width: 80%;
-            margin: 0 auto 35px auto;
-        }
-
-        .options-caption {
-            margin-top: $elementMargin;
-        }
     }
     footer {
 

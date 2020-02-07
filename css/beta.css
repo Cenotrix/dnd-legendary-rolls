@@ -7,6 +7,48 @@
 * #a7ce97
 * #fff
 */
+/**
+* Darkmode Colors
+*/
+/*
+$background: #2a2a2a;
+$normalFontColor: #38b2ac;
+$placeholderFontColor: #a2a2a2;
+$normalFontSize: 18px;
+*/
+/**
+* End of Darkmode Colors
+*/
+body main .value-display, body main .option-wrapper input, body main .history-wrapper #roll-history, body main .dice-magic #btn:active {
+  -webkit-box-shadow: inset -2px -2px 6px #fff,  inset 2px 2px 6px #a3b1c6;
+          box-shadow: inset -2px -2px 6px #fff,  inset 2px 2px 6px #a3b1c6;
+}
+
+body header, body main .dice-magic #btn, body main .option-wrapper .options-caption, body main .history-wrapper .history-caption {
+  -webkit-box-shadow: -4px -4px 9px #fff, 4px 4px 9px #a3b1c6;
+          box-shadow: -4px -4px 9px #fff, 4px 4px 9px #a3b1c6;
+}
+
+body header, body main .dice-magic #btn, body main .option-wrapper .options-caption, body main .history-wrapper .history-caption {
+  background: #e0e5ec;
+  color: #333;
+  font-size: 18px;
+  padding: 5px 15px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+}
+
+body main .value-display, body main .option-wrapper input, body main .history-wrapper #roll-history {
+  background: #e0e5ec;
+  color: #333;
+  font-size: 18px;
+  padding: 5px 15px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -16,6 +58,10 @@
   font-weight: 400;
   color: #0e1e35;
   font-size: 24px;
+}
+
+body {
+  background: #e0e5ec;
 }
 
 body header {
@@ -32,16 +78,14 @@ body header {
       -ms-flex-pack: center;
           justify-content: center;
   text-align: center;
-  background: #295a56;
-  padding: 15px;
 }
 
 body header h1 {
-  color: #fff;
+  color: #333;
 }
 
 body header .caption {
-  color: #fff;
+  color: #333;
   font-size: 18px;
 }
 
@@ -64,39 +108,60 @@ body main {
   margin: 0 auto;
 }
 
+body main #statlist {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  list-style: none;
+}
+
 body main .dice-magic {
   margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 body main .dice-magic #btn {
-  color: #fff;
-  background: #295a56;
+  color: #333;
+  background: #e0e5ec;
   padding: 5px;
   display: inline;
   text-align: center;
   cursor: pointer;
 }
 
-body main input {
-  margin: 5px 0;
+body main .option-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  text-align: center;
 }
 
-body main #statlist {
-  margin: 15px;
-  list-style: none;
-}
-
-body main .history-caption {
+body main .option-wrapper .options-caption {
   margin-top: 15px;
 }
 
-body main #roll-history {
-  width: 80%;
-  margin: 0 auto 35px auto;
+body main .option-wrapper input {
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
-body main .options-caption {
+body main .history-wrapper .history-caption {
   margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+body main .history-wrapper #roll-history {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  width: 100%;
 }
 
 body footer h6 {
