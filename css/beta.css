@@ -7,48 +7,6 @@
 * #a7ce97
 * #fff
 */
-/**
-* Darkmode Colors
-*/
-/*
-$background: #2a2a2a;
-$normalFontColor: #38b2ac;
-$placeholderFontColor: #a2a2a2;
-$normalFontSize: 18px;
-*/
-/**
-* End of Darkmode Colors
-*/
-body main .value-display, body main .option-wrapper input, body main .history-wrapper #roll-history, body main .dice-magic #btn:active {
-  -webkit-box-shadow: inset -2px -2px 6px #fff,  inset 2px 2px 6px #a3b1c6;
-          box-shadow: inset -2px -2px 6px #fff,  inset 2px 2px 6px #a3b1c6;
-}
-
-body header, body main .dice-magic #btn, body main .option-wrapper .options-caption, body main .history-wrapper .history-caption {
-  -webkit-box-shadow: -4px -4px 9px #fff, 4px 4px 9px #a3b1c6;
-          box-shadow: -4px -4px 9px #fff, 4px 4px 9px #a3b1c6;
-}
-
-body header, body main .dice-magic #btn, body main .option-wrapper .options-caption, body main .history-wrapper .history-caption {
-  background: #e0e5ec;
-  color: #333;
-  font-size: 18px;
-  padding: 5px 15px;
-  border-radius: 10px;
-  border: none;
-  outline: none;
-}
-
-body main .value-display, body main .option-wrapper input, body main .history-wrapper #roll-history {
-  background: #e0e5ec;
-  color: #333;
-  font-size: 18px;
-  padding: 5px 15px;
-  border-radius: 10px;
-  border: none;
-  outline: none;
-}
-
 * {
   margin: 0;
   padding: 0;
@@ -56,12 +14,8 @@ body main .value-display, body main .option-wrapper input, body main .history-wr
           box-sizing: border-box;
   font-family: sans-serif;
   font-weight: 400;
-  color: #0e1e35;
+  color: #333;
   font-size: 24px;
-}
-
-body {
-  background: #e0e5ec;
 }
 
 body header {
@@ -78,14 +32,15 @@ body header {
       -ms-flex-pack: center;
           justify-content: center;
   text-align: center;
+  background: #173c45;
 }
 
 body header h1 {
-  color: #333;
+  color: #fff;
 }
 
 body header .caption {
-  color: #333;
+  color: #fff;
   font-size: 18px;
 }
 
@@ -120,8 +75,9 @@ body main .dice-magic {
 }
 
 body main .dice-magic #btn {
-  color: #333;
-  background: #e0e5ec;
+  color: #fff;
+  background: #173c45;
+  outline: none;
   padding: 5px;
   display: inline;
   text-align: center;
@@ -162,6 +118,14 @@ body main .history-wrapper #roll-history {
   margin-top: 15px;
   margin-bottom: 15px;
   width: 100%;
+}
+
+body main .history-wrapper tr th {
+  width: 30%;
+}
+
+body main .history-wrapper tr td {
+  width: 30%;
 }
 
 body footer h6 {
