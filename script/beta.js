@@ -33,13 +33,13 @@ let missing;
 let combiArray = [];
 
 for(i = 0; i <= array.length; j++) {
-	if(array[i] + array[array.length - ( j + 1)] < 10) {
+	if( array[i] + array[array.length - ( j + 1)] < min ) {
 		missing = ( min - ( array[i] + array[array.length - ( j + 1 )] ) );
 		combiArray.push( array[i] + " + " + array[array.length - ( j + 1 )] + " + " + array[missing-1] );
 	}
-	if(missing === 6){
+	if( missing === 6 ){
 		i++;
-		// j = 1; <- Endless load
+		j = -1;// <- Endless load
 	}
 }
 
