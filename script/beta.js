@@ -18,6 +18,7 @@ const calculatePossibleCombination = ( array, data, start, end, index, min, max 
 	}
 };
 
+
 let array = [
 				1,
 				2,
@@ -32,16 +33,17 @@ let min = 10;
 let missing;
 let combiArray = [];
 
-for(i = 0; i <= array.length; j++) {
+for(i = 0; i < array.length && j < array.length; j++) {
 	if( array[i] + array[array.length - ( j + 1)] < min ) {
-		missing = ( min - ( array[i] + array[array.length - ( j + 1 )] ) );
+		missing = min - parseInt( array[i] + array[array.length - ( j + 1 )] );
 		combiArray.push( array[i] + " + " + array[array.length - ( j + 1 )] + " + " + array[missing-1] );
 	}
-	if( missing === 6 ){
+	if( missing === array[array.length - 1] ){
 		i++;
-		j = -1;// <- Endless load
+		j = -1;
 	}
 }
+
 
 // für 10
 [
@@ -72,7 +74,23 @@ for(i = 0; i <= array.length; j++) {
 	"6 + 1 + 3",
 	"6 + 2 + 2",
 	"6 + 3 + 1"
-]
+];
+
+// für 10
+[
+	"1 + 6 + 3",
+	"1 + 5 + 4",
+	"2 + 6 + 2",
+	"2 + 5 + 3",
+	"2 + 4 + 4",
+	"3 + 4 + 3",
+];
+
+function getCombinations( arr, combinationArr, combinationValue, currentIndex ) {
+	!currentIndex ? currentIndex = 0 : currentIndex = currentIndex;
+	console.log(currentIndex);
+}
+
 
 function Dice(diceMin, diceMax) {
 	this.diceMin = diceMin,
