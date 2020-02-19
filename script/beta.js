@@ -46,7 +46,7 @@ for(i = 0; i < array.length && j < array.length; j++) {
 
 
 // für 10
-[
+let testArray = [
 	"1 + 6 + 3",
 	"1 + 5 + 4",
 	"1 + 4 + 5",
@@ -76,6 +76,36 @@ for(i = 0; i < array.length && j < array.length; j++) {
 	"6 + 3 + 1"
 ];
 
+let actualArray = [
+	"1 + 6 + 3",
+	"1 + 5 + 4",
+	"1 + 4 + 5",
+	"1 + 3 + 6",
+	"2 + 6 + 2",
+	"2 + 5 + 3",
+	"2 + 4 + 4",
+	"2 + 3 + 5",
+	"2 + 2 + 6",
+	"3 + 6 + 1",
+	"3 + 5 + 2",
+	"3 + 4 + 3",
+	"3 + 3 + 4",
+	"3 + 2 + 5",
+	"3 + 1 + 6",
+	"4 + 5 + 1",
+	"4 + 4 + 2",
+	"4 + 3 + 3",
+	"4 + 2 + 4",
+	"4 + 1 + 5",
+	"5 + 4 + 1",
+	"5 + 3 + 2",
+	"5 + 2 + 3",
+	"5 + 1 + 4",
+	"6 + 3 + 1",
+	"6 + 2 + 2",
+	"6 + 1 + 3"
+]
+
 // für 10
 [
 	"1 + 6 + 3",
@@ -86,10 +116,6 @@ for(i = 0; i < array.length && j < array.length; j++) {
 	"3 + 4 + 3",
 ];
 
-function getCombinations( arr, combinationArr, combinationValue, currentIndex ) {
-	!currentIndex ? currentIndex = 0 : currentIndex = currentIndex;
-	console.log(currentIndex);
-}
 
 
 function Dice(diceMin, diceMax) {
