@@ -109,6 +109,36 @@ body main .option-wrapper input {
   margin-bottom: 5px;
 }
 
+body main .option-wrapper #dm-mode-wrapper label {
+  position: relative;
+}
+
+body main .option-wrapper #dm-mode-wrapper input[type=checkbox] {
+  display: none;
+}
+
+body main .option-wrapper #dm-mode-wrapper input[type=checkbox] + label::before {
+  width: 24px;
+  height: 24px;
+  border-radius: 11px;
+  border: 2px solid #173c45;
+  background-color: #fff;
+  display: block;
+  content: "";
+  position: absolute;
+  left: -25%;
+  top: 0%;
+  margin-right: 5px;
+  -webkit-transform: scale(0.7);
+          transform: scale(0.7);
+}
+
+body main .option-wrapper #dm-mode-wrapper input[type=checkbox]:checked + label::before {
+  -webkit-box-shadow: inset 0px 0px 0px 3px #fff;
+          box-shadow: inset 0px 0px 0px 3px #fff;
+  background-color: #173c45;
+}
+
 body main .history-wrapper .history-caption {
   margin-top: 15px;
   margin-bottom: 15px;

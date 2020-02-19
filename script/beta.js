@@ -4,20 +4,7 @@ const sortAsc = ( array ) => array.sort( ( a, b ) => a - b );
 // Errechnet die Summe des Arrays
 const sumOfArray = ( array ) => array.reduce( ( a, b ) => a + b, 0 );
 
-const makeCombinationArray = ( start, end, min, max  ) => {
-	array = [];
-	for(i = start; i <= end; i++) {
-		array.push(i);
-	}
-	calculatePossibleCombination( array, min, max );
-}
-
-const calculatePossibleCombination = ( array, data, start, end, index, min, max ) => {
-	for(i = min; i <= max; i++) {
-		
-	}
-};
-
+/* Befindet sich jetzt in dem Objekt "Stat"
 function fudgeLegendaryRoll(desiredValue, minChar, maxChar) {
 	let 
 	possibleCombinations = [],
@@ -51,8 +38,9 @@ function fudgeLegendaryRoll(desiredValue, minChar, maxChar) {
 	// Return des vollständigen Arrays
 	return possibleCombinations;
 }
+*/
 
-function Dice(diceMin, diceMax) {
+function Dice( diceMin, diceMax ) {
 	this.diceMin = diceMin,
 	this.diceMax = diceMax,
 	this.rollDice = function( min, max ) {
@@ -63,7 +51,7 @@ function Dice(diceMin, diceMax) {
 		return Math.floor( Math.random() * ((max) - (min - 1))) + min;
 	},
 	this.legendaryRoll = function( rerolled ) {
-		number = Math.floor( Math.random() * ((this.diceMax) - (this.diceMin - 1))) + this.diceMin;
+		number = Math.floor( Math.random() * ( (this.diceMax) - (this.diceMin - 1) )) + this.diceMin;
 
 		if( rerolled === true ) {
 			return number;
@@ -77,18 +65,12 @@ function Dice(diceMin, diceMax) {
 	}
 }
 
-function Stat() {
+function Stat( boundElement ) {
+	this.boundElement = boundElement,
 	this.diceMin = 1,
 	this.diceMax = 6,
 	this.statMin = 3,
 	this.statMax = 18,
-	this.calculateDiceValues = function() {
-		if( value % 3 === 0 ) {
-			value = value / 3;
-		}else {
-			calculatePossibleCombination( this.statMin, this.statMax, 3 );
-		}
-	},
 	this.setMin = function(value) {
 		this.diceMin = value;
 	},
@@ -97,6 +79,14 @@ function Stat() {
 	},
 	this.legendaryRoll = function() {
 		dice6.legendaryRoll();
+	},
+	this.getFudgedLegendaryRoll = function( desiredValue ) {
+		let combination = this.getArrayWithFudgedLegendaryRollCombinations( desiredValue, this.diceMin, this.diceMax ),
+		min = 0,
+		max = combination.length - 1,
+		randomNumber = Math.floor( Math.random() * ((max) - (min - 1))) + min;
+
+		return combination[randomNumber];
 	},
 	this.getArrayWithFudgedLegendaryRollCombinations = function( desiredValue, minDieValue, maxDieValue ) {
 		let
@@ -156,13 +146,15 @@ function Stat() {
 	}
 }
 
+let stats = document.querySelectorAll("#statlist li");
+
 // Alle Stats.
-let str = new Stat();
-let dex = new Stat();
-let con = new Stat();
-let int = new Stat();
-let wis = new Stat();
-let cha = new Stat();
+let str = new Stat([...stats][0]);
+let dex = new Stat([...stats][1]);
+let con = new Stat([...stats][2]);
+let int = new Stat([...stats][3]);
+let wis = new Stat([...stats][4]);
+let cha = new Stat([...stats][5]);
 
 // Alle Dices.
 const dice4 = new Dice(1, 4);

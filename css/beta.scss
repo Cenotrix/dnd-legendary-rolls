@@ -99,6 +99,39 @@ body {
                 margin-top: 5px;
                 margin-bottom: 5px;
             }
+
+            #dm-mode-wrapper {
+                
+                label {
+                    position: relative;
+                }
+
+                input {
+                    &[type=checkbox] {
+                        display: none;
+
+                        &+label::before {
+                            width: 24px;
+                            height: 24px;
+                            border-radius: 11px;
+                            border: 2px solid $backgroundColor;
+                            background-color: #fff;
+                            display: block;
+                            content: "";
+                            position: absolute;
+                            left: -25%;
+                            top: 0%;
+                            margin-right: 5px;
+                            transform: scale(.7);
+                        }
+
+                        &:checked+label::before {
+                            box-shadow: inset 0px 0px 0px 3px #fff;
+                            background-color: $backgroundColor;
+                        }
+                    }
+                }
+            }
         }
 
         .history-wrapper {
