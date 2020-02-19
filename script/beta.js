@@ -74,11 +74,37 @@ function Dice(diceMin, diceMax) {
 		}
 
 		return number;
+	}
+}
+
+function Stat() {
+	this.diceMin = 1,
+	this.diceMax = 6,
+	this.statMin = 3,
+	this.statMax = 18,
+	this.calculateDiceValues = function() {
+		if( value % 3 === 0 ) {
+			value = value / 3;
+		}else {
+			calculatePossibleCombination( this.statMin, this.statMax, 3 );
+		}
 	},
-	this.fudgedLegendaryRoll = function( desiredValue, minDieValue, maxDieValue ) {
-		let 
+	this.setMin = function(value) {
+		this.diceMin = value;
+	},
+	this.setMax = function(value) {
+		this.diceMax = value;
+	},
+	this.legendaryRoll = function() {
+		dice6.legendaryRoll();
+	},
+	this.getArrayWithFudgedLegendaryRollCombinations = function( desiredValue, minDieValue, maxDieValue ) {
+		let
 		possibleCombinations = [],
 		possibleCharacters = [];
+		
+		minDieValue === undefined ? minDieValue = this.diceMin : minDieValue = minDieValue;
+		maxDieValue === undefined ? maxDieValue = this.diceMax : maxDieValue = maxDieValue;
 
 		for( let i = minDieValue; i <= maxDieValue; i++ ) {
 			possibleCharacters.push(i);
@@ -107,29 +133,6 @@ function Dice(diceMin, diceMax) {
 		}
 		// Return des vollständigen Arrays
 		return possibleCombinations;
-		}
-	}
-
-function Stat() {
-	this.diceMin = 1,
-	this.diceMax = 6,
-	this.statMin = 3,
-	this.statMax = 18,
-	this.calculateDiceValues = function() {
-		if( value % 3 === 0 ) {
-			value = value / 3;
-		}else {
-			calculatePossibleCombination( this.statMin, this.statMax, 3 );
-		}
-	},
-	this.setMin = function(value) {
-		this.diceMin = value;
-	},
-	this.setMax = function(value) {
-		this.diceMax = value;
-	},
-	this.legendaryRoll = function() {
-		dice6.legendaryRoll();
 	},
 	this.calculateStat = function() {
 		if( this.actualStat !== undefined ) {
