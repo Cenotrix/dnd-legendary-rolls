@@ -18,111 +18,49 @@ const calculatePossibleCombination = ( array, data, start, end, index, min, max 
 	}
 };
 
+function fudgeLegendaryRoll(desiredValue, minChar, maxChar) {
+	let 
+	possibleCombinations = [],
+	possibleCharacters = [];
 
-let array = [
-				1,
-				2,
-				3,
-				4,
-				5,
-				6
-			]
-let i = 0;
-let j = 0;
-let min = 10;
-let missing;
-let combiArray = [];
+	for( let i = minChar; i <= maxChar; i++ ) {
+		possibleCharacters.push(i);
+	}
 
-for(i = 0; i < array.length && j < array.length; j++) {
-	if( array[i] + array[array.length - ( j + 1)] < min ) {
-		missing = min - parseInt( array[i] + array[array.length - ( j + 1 )] );
-		combiArray.push( array[i] + " + " + array[array.length - ( j + 1 )] + " + " + array[missing-1] );
+	for(let i = 0, j = 0; i <= possibleCharacters.length && j <= possibleCharacters.length; j++) {
+		let missing;
+
+		// Push der Kombination in das array, wenn es eine gültige Kombination ist.
+		if( possibleCharacters[i] + possibleCharacters[(possibleCharacters.length - ( j + 1))] < desiredValue) {
+			missing = desiredValue - parseInt( possibleCharacters[i] + possibleCharacters[possibleCharacters.length - ( j + 1 )] );
+			if( missing <= possibleCharacters[possibleCharacters.length - 1] ){
+				possibleCombinations.push( possibleCharacters[i] + " + " + possibleCharacters[possibleCharacters.length - ( j + 1 )] + " + " + possibleCharacters[missing-1] );
+			}
+		}
+		// Erhöht den i Wert, sobald alle Kombinationen überprüft wurden. Reset des j Wertes.
+		if( missing === possibleCharacters[possibleCharacters.length - 1] || possibleCharacters[i] + possibleCharacters[0] + possibleCharacters[missing-1] == desiredValue && possibleCharacters[missing-1] < possibleCharacters[possibleCharacters.length-1]){
+			i++;
+			j = -1;
+		}
+		// Erhöht den i Wert, sobald es keine gültige Kombinationsmöglichkeiten mit dem ersten possibleCharacter[i] gibt. Reset des j Wertes.
+		if( possibleCharacters[i] + possibleCharacters[possibleCharacters.length - ( j + 1 )] + possibleCharacters[possibleCharacters.length - 1] < desiredValue ) {
+			i++;
+			j = -1;
+		}
 	}
-	if( missing === array[array.length - 1] ){
-		i++;
-		j = -1;
-	}
+	// Return des vollständigen Arrays
+	return possibleCombinations;
 }
-
-
-// für 10
-let testArray = [
-	"1 + 6 + 3",
-	"1 + 5 + 4",
-	"1 + 4 + 5",
-	"1 + 3 + 6",
-	"2 + 6 + 2",
-	"2 + 5 + 3",
-	"2 + 4 + 4",
-	"2 + 3 + 5",
-	"2 + 2 + 6",
-	"3 + 6 + 1",
-	"3 + 5 + 2",
-	"3 + 4 + 3",
-	"3 + 3 + 4",
-	"3 + 2 + 5",
-	"3 + 1 + 6",
-	"4 + 5 + 1",
-	"4 + 4 + 2",
-	"4 + 3 + 3",
-	"4 + 2 + 4",
-	"4 + 1 + 5",
-	"5 + 4 + 1",
-	"5 + 3 + 2",
-	"5 + 2 + 3",
-	"5 + 1 + 4",
-	"6 + 1 + 3",
-	"6 + 2 + 2",
-	"6 + 3 + 1"
-];
-
-let actualArray = [
-	"1 + 6 + 3",
-	"1 + 5 + 4",
-	"1 + 4 + 5",
-	"1 + 3 + 6",
-	"2 + 6 + 2",
-	"2 + 5 + 3",
-	"2 + 4 + 4",
-	"2 + 3 + 5",
-	"2 + 2 + 6",
-	"3 + 6 + 1",
-	"3 + 5 + 2",
-	"3 + 4 + 3",
-	"3 + 3 + 4",
-	"3 + 2 + 5",
-	"3 + 1 + 6",
-	"4 + 5 + 1",
-	"4 + 4 + 2",
-	"4 + 3 + 3",
-	"4 + 2 + 4",
-	"4 + 1 + 5",
-	"5 + 4 + 1",
-	"5 + 3 + 2",
-	"5 + 2 + 3",
-	"5 + 1 + 4",
-	"6 + 3 + 1",
-	"6 + 2 + 2",
-	"6 + 1 + 3"
-]
-
-// für 10
-[
-	"1 + 6 + 3",
-	"1 + 5 + 4",
-	"2 + 6 + 2",
-	"2 + 5 + 3",
-	"2 + 4 + 4",
-	"3 + 4 + 3",
-];
-
-
 
 function Dice(diceMin, diceMax) {
 	this.diceMin = diceMin,
 	this.diceMax = diceMax,
 	this.rollDice = function( min, max ) {
-		return Math.floor( Math.random() * ((this.diceMax) - (this.diceMin - 1))) + this.diceMin;
+		if( !min && !max ) {
+			min = this.diceMin;
+			max = this.diceMax;	
+		}
+		return Math.floor( Math.random() * ((max) - (min - 1))) + min;
 	},
 	this.legendaryRoll = function( rerolled ) {
 		number = Math.floor( Math.random() * ((this.diceMax) - (this.diceMin - 1))) + this.diceMin;
@@ -132,19 +70,45 @@ function Dice(diceMin, diceMax) {
 		}
 
 		if( number === 1 ) {
-			return this.getRoll( true );
+			return this.legendaryRoll( true );
 		}
 
 		return number;
 	},
-	this.fudgedRoll = function( min, max ) {
-		if( min <= this.diceMin && max >= this.diceMax ) {
-			return Math.floor( Math.random() * ((max) - (min - 1))) + min;
-		}else {
-			console.log("Die Zahlen müssen sich schon auf dem Würfel befinden ;)");
+	this.fudgedLegendaryRoll = function( desiredValue, minDieValue, maxDieValue ) {
+		let 
+		possibleCombinations = [],
+		possibleCharacters = [];
+
+		for( let i = minDieValue; i <= maxDieValue; i++ ) {
+			possibleCharacters.push(i);
+		}
+
+		for(let i = 0, j = 0; i <= possibleCharacters.length && j <= possibleCharacters.length; j++) {
+			let missing;
+
+			// Push der Kombination in das array, wenn es eine gültige Kombination ist.
+			if( possibleCharacters[i] + possibleCharacters[(possibleCharacters.length - ( j + 1))] < desiredValue) {
+				missing = desiredValue - parseInt( possibleCharacters[i] + possibleCharacters[possibleCharacters.length - ( j + 1 )] );
+				if( missing <= possibleCharacters[possibleCharacters.length - 1] ){
+					possibleCombinations.push( possibleCharacters[i] + " + " + possibleCharacters[possibleCharacters.length - ( j + 1 )] + " + " + possibleCharacters[missing-1] );
+				}
+			}
+			// Erhöht den i Wert, sobald alle Kombinationen überprüft wurden. Reset des j Wertes.
+			if( missing === possibleCharacters[possibleCharacters.length - 1] || possibleCharacters[i] + possibleCharacters[0] + possibleCharacters[missing-1] == desiredValue && possibleCharacters[missing-1] < possibleCharacters[possibleCharacters.length-1]){
+				i++;
+				j = -1;
+			}
+			// Erhöht den i Wert, sobald es keine gültige Kombinationsmöglichkeiten mit dem ersten possibleCharacter[i] gibt. Reset des j Wertes.
+			if( possibleCharacters[i] + possibleCharacters[possibleCharacters.length - ( j + 1 )] + possibleCharacters[possibleCharacters.length - 1] < desiredValue ) {
+				i++;
+				j = -1;
+			}
+		}
+		// Return des vollständigen Arrays
+		return possibleCombinations;
 		}
 	}
-}
 
 function Stat() {
 	this.diceMin = 1,
@@ -164,7 +128,7 @@ function Stat() {
 	this.setMax = function(value) {
 		this.diceMax = value;
 	},
-	this.getRoll = function() {
+	this.legendaryRoll = function() {
 		dice6.legendaryRoll();
 	},
 	this.calculateStat = function() {
@@ -177,7 +141,7 @@ function Stat() {
 	this.getStat = function() {
 		this.stat = [];
 		for(i = 0; i <= 3; i++) {
-			this.stat.push(this.getRoll());
+			this.stat.push(this.legendaryRoll());
 		}
 	},
 	this.getActualStat = function() {
