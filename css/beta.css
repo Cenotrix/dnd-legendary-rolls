@@ -163,4 +163,9 @@ body footer h6 {
   position: fixed;
   bottom: 0;
 }
+
+/*JS CLASSES*/
+.display-none {
+  display: none !important;
+}
 /*# sourceMappingURL=beta.css.map */
