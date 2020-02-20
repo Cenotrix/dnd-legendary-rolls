@@ -14,14 +14,14 @@ function Stat( boundElement ) {
 	this.diceMax = 6,
 	this.statMin = 3,
 	this.statMax = 18,
-	this.setMin = function(value) {
+	this.setMin = function( value ) {
 		this.diceMin = value;
 	},
-	this.setMax = function(value) {
+	this.setMax = function( value ) {
 		this.diceMax = value;
 	},
 	this.legendaryRoll = function() {
-		dice6.legendaryRoll();
+		return dice6.legendaryRoll();
 	},
 	this.getFudgedLegendaryRoll = function( desiredValue ) {
 		let combination = this.getArrayWithFudgedLegendaryRollCombinations( desiredValue, this.diceMin, this.diceMax ),
@@ -71,7 +71,9 @@ function Stat( boundElement ) {
 		if( this.actualStat !== undefined ) {
 			this.statValue = sumOfArray( this.actualStat );
 		}else {
-			console.log("ERROR, this.actualStat ist noch nicht vorhanden. Use " + this + ".getActualStat.");
+			this.getActualStat();
+			this.calculateStat();
+			// console.log("ERROR, this.actualStat ist noch nicht vorhanden. Use " + this + ".getActualStat.");
 		}
 	},
 	this.getStat = function() {
@@ -84,7 +86,9 @@ function Stat( boundElement ) {
 		if( this.stat !== undefined ) {
 			this.actualStat = sortAsc([...this.stat]).slice(1,4);
 		}else {
-			console.log("ERROR, this.stat ist noch nicht vorhanden. Use " + this + ".getStat.");
+			this.getStat();
+			this.getActualStat();
+			// console.log("ERROR, this.stat ist noch nicht vorhanden. Use " + this + ".getStat.");
 		}
 	}
 }
@@ -113,8 +117,24 @@ function Dice( diceMin, diceMax ) {
 		return number;
 	}
 }
+const stats = document.querySelectorAll("#statlist li");
+function Character( name ) {
+	this.stats = {
+		str: new Stat([...stats][0]),
+		dex: new Stat([...stats][1]),
+		con: new Stat([...stats][2]),
+		int: new Stat([...stats][3]),
+		wis: new Stat([...stats][4]),
+		cha: new Stat([...stats][5])
+	},
+	this.generateStats = function() {
+		
+	}
+}
 
-/* OBJECTS UND OBJECTLITERALS */
+const test = new Character( "Test" );
+
+/* OBJECTS UND OBJECT LITERALS */
 // Optionen
 const Options = {
 	publicOptions: { 
@@ -128,7 +148,6 @@ const Options = {
 		],
 		toggleDmMode: function( status ) {
 			status === true ? this.boundElements.forEach( (element) => element.classList.remove("display-none") ) : this.boundElements.forEach( (element) => element.classList.add("display-none") );
-	
 		},
 		dmOptions: {
 			fullCharManipulator: [
@@ -139,15 +158,6 @@ const Options = {
 		},
 	}
 }
-
-// Alle Stats.
-const stats = document.querySelectorAll("#statlist li");
-let str = new Stat([...stats][0]);
-let dex = new Stat([...stats][1]);
-let con = new Stat([...stats][2]);
-let int = new Stat([...stats][3]);
-let wis = new Stat([...stats][4]);
-let cha = new Stat([...stats][5]);
 
 // Alle Dices.
 const dice4 = new Dice(1, 4);
