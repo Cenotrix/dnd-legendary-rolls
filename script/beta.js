@@ -1,5 +1,4 @@
 /* HIGHERORDER FUNCTIONS */
-
 // Zum aufsteigendem Sortieren von Arrays
 const sortAsc = ( array ) => array.sort( ( a, b ) => a - b );
 
@@ -7,29 +6,22 @@ const sortAsc = ( array ) => array.sort( ( a, b ) => a - b );
 const sumOfArray = ( array ) => array.reduce( ( a, b ) => a + b, 0 );
 
 /* CONSTRUCTOR FUNCTIONS */
-
 function Stat( boundElement ) {
 	this.boundElement = boundElement,
 	this.diceMin = 1,
 	this.diceMax = 6,
 	this.statMin = 3,
 	this.statMax = 18,
-	this.setMin = function( value ) {
-		this.diceMin = value;
-	},
-	this.setMax = function( value ) {
-		this.diceMax = value;
-	},
 	this.legendaryRoll = function() {
 		return dice6.legendaryRoll();
 	},
 	this.getFudgedLegendaryRoll = function( desiredValue ) {
-		let combination = this.getArrayWithFudgedLegendaryRollCombinations( desiredValue, this.diceMin, this.diceMax ),
+		let combinations = this.getArrayWithFudgedLegendaryRollCombinations( desiredValue, this.diceMin, this.diceMax ),
 		min = 0,
 		max = combination.length - 1,
 		randomNumber = Math.floor( Math.random() * ((max) - (min - 1))) + min;
 
-		return combination[randomNumber];
+		return combinations[randomNumber];
 	},
 	this.getArrayWithFudgedLegendaryRollCombinations = function( desiredValue, minDieValue, maxDieValue ) {
 		let
@@ -81,6 +73,9 @@ function Stat( boundElement ) {
 		for(i = 0; i <= 3; i++) {
 			this.stat.push(this.legendaryRoll());
 		}
+		this.sortAscStat = sortAsc([...this.stat]); // Das Stat Array, der größe nach sortiert, hat noch keinen Nutzen
+		this.statString = ([...this.stat]).toString(); // Das Stat Array als String
+		this.statString = this.statString.replace(/,/g," + "); // Der String des Stat Arrays verschönert, um es später besser zu verstehen.
 	},
 	this.getActualStat = function() {
 		if( this.stat !== undefined ) {
@@ -90,6 +85,19 @@ function Stat( boundElement ) {
 			this.getActualStat();
 			// console.log("ERROR, this.stat ist noch nicht vorhanden. Use " + this + ".getStat.");
 		}
+	},
+	this.generateStat = function() {
+		if( this.statValue === undefined ) {
+			this.calculateStat();
+		}
+		return this.statValue;
+	}
+	this.displayStat = function() {
+		if( this.statValue === undefined ) {
+			this.generateStat();
+		}
+		this.boundElement.children[0].innerText = this.statString + " drop(" + Math.min(...this.stat) + ")" + " = "; // Der mathematische Weg zu dem Wert
+		this.boundElement.children[1].innerText = this.statValue; // Der Wert, des Stats
 	}
 }
 
@@ -117,29 +125,48 @@ function Dice( diceMin, diceMax ) {
 		return number;
 	}
 }
+
 const stats = document.querySelectorAll("#statlist li");
 function Character( name ) {
-	this.stats = {
-		str: new Stat([...stats][0]),
-		dex: new Stat([...stats][1]),
-		con: new Stat([...stats][2]),
-		int: new Stat([...stats][3]),
-		wis: new Stat([...stats][4]),
-		cha: new Stat([...stats][5])
-	},
+	name ? this.name = name : this.name = undefined,
+	this.stats = [
+		new Stat([...stats][0]),
+		new Stat([...stats][1]),
+		new Stat([...stats][2]),
+		new Stat([...stats][3]),
+		new Stat([...stats][4]),
+		new Stat([...stats][5])
+	],
 	this.generateStats = function() {
-		
+		this.stats.forEach( stat => stat.generateStat() );
+	},
+	this.displayStats = function() {
+		this.stats.forEach( stat => stat.displayStat() );
+	},
+	this.characterOptions = {
+		dmOptions: {
+			fullCharManipulator: [
+				document.querySelector("#dice-manipulator-min"),
+				document.querySelector("#dice-manipulator-max")
+			],
+			singleStatManipulator: [...document.querySelectorAll(".stat-options")],
+		},
 	}
 }
 
-const test = new Character( "Test" );
+const test = new Character();
 
 /* OBJECTS UND OBJECT LITERALS */
+// Display
+const Display = {
+	currentlyDisplayed: { /* Hier kommt dann der Character rein, der gerade angezeigt wird. */ },
+	toggleDisplay: function() {
+		/* Hier kommt dann die Funktion rein, um einen Leeren, oder einen alten Character anzuzeigen. */
+	}
+}
+
 // Optionen
-const Options = {
-	publicOptions: { 
-		multipleCharakters: document.querySelector("#multi-char-roll"),
-	},
+const PageOptions = {
 	dmMode: {
 		element: document.querySelector("#dm-mode"),
 		boundElements: [
@@ -147,14 +174,7 @@ const Options = {
 			...document.querySelectorAll(".dm-statlist-fudge")
 		],
 		toggleDmMode: function( status ) {
-			status === true ? this.boundElements.forEach( (element) => element.classList.remove("display-none") ) : this.boundElements.forEach( (element) => element.classList.add("display-none") );
-		},
-		dmOptions: {
-			fullCharManipulator: [
-				document.querySelector("#dice-manipulator-min"),
-				document.querySelector("#dice-manipulator-max")
-			],
-			singleStatManipulator: document.querySelectorAll(".stat-options"),
+			status === true ? this.boundElements.forEach( element => element.classList.remove("display-none") ) : this.boundElements.forEach( (element) => element.classList.add("display-none") );
 		},
 	}
 }
@@ -174,14 +194,14 @@ const dmBtn = document.querySelector("#dm-mode");
 dmBtn.addEventListener('change', function() {
 	if( dmBtn.checked === true ) {
 		let dmPassword = window.prompt("Bitte das DM Passwort eingeben!");
-		if( dmPassword === "25" /*|| dmPassword === "das gewünschte passwort" */ /*<- Für weitere Passwörter. Um das Passwort zu ändern, einfach den String "25 ändern. Es MUSS ein String sein, da mit === gearbeitet wird!" */) {
-			Options.dmMode.toggleDmMode( true );
+		if( dmPassword === "25" /*|| dmPassword === "das gewünschte passwort" */ /*<- Für weitere Passwörter. Um das Passwort zu ändern, einfach den String "25" ändern. Es MUSS ein String sein, da mit === gearbeitet wird! */) {
+			PageOptions.dmMode.toggleDmMode( true );
 		}else {
 			alert("Falsches Passwort!");
 			dmBtn.checked = false;
 		}
 	}else {
-		Options.dmMode.toggleDmMode( false );
+		PageOptions.dmMode.toggleDmMode( false );
 	}
 });
 
