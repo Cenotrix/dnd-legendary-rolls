@@ -5,6 +5,42 @@ const sortAsc = ( array ) => array.sort( ( a, b ) => a - b );
 // Errechnet die Summe des Arrays
 const sumOfArray = ( array ) => array.reduce( ( a, b ) => a + b, 0 );
 
+/* Hier müsste einmal die Dice.js importiert werden. */
+// Alle Dices.
+function Dice( diceMin, diceMax ) {
+	this.diceMin = diceMin,
+	this.diceMax = diceMax,
+	this.rollDice = function( min, max ) {
+		if( !min && !max ) {
+			min = this.diceMin;
+			max = this.diceMax;	
+		}
+		return Math.floor( Math.random() * ((max) - (min - 1))) + min;
+	},
+	this.legendaryRoll = function( rerolled ) {
+		number = Math.floor( Math.random() * ( (this.diceMax) - (this.diceMin - 1) )) + this.diceMin;
+
+		if( rerolled === true ) {
+			return number;
+		}
+
+		if( number === 1 ) {
+			return this.legendaryRoll( true );
+		}
+
+		return number;
+	}
+}
+
+const dice4 = new Dice(1, 4);
+const dice6 = new Dice(1, 6);
+const dice8 = new Dice(1, 8);
+const dice10 = new Dice(1, 10);
+const dice12 = new Dice(1, 12);
+const dice20 = new Dice(1, 20);
+const dice100 = new Dice(1, 100);
+/* Ende des Dice erstellen. */
+
 /* CONSTRUCTOR FUNCTIONS */
 function Stat( boundElement ) {
 	this.boundElement = boundElement,
@@ -59,15 +95,6 @@ function Stat( boundElement ) {
 		// Return des vollständigen Arrays
 		return possibleCombinations;
 	},
-	this.calculateStat = function() {
-		if( this.actualStat !== undefined ) {
-			this.statValue = sumOfArray( this.actualStat );
-		}else {
-			this.getActualStat();
-			this.calculateStat();
-			// console.log("ERROR, this.actualStat ist noch nicht vorhanden. Use " + this + ".getActualStat.");
-		}
-	},
 	this.getStat = function() {
 		this.stat = [];
 		for(i = 0; i <= 3; i++) {
@@ -86,6 +113,28 @@ function Stat( boundElement ) {
 			// console.log("ERROR, this.stat ist noch nicht vorhanden. Use " + this + ".getStat.");
 		}
 	},
+	this.calculateStat = function() {
+		if( this.actualStat !== undefined ) {
+			this.statValue = sumOfArray( this.actualStat );
+		}else {
+			this.getActualStat();
+			this.calculateStat();
+			// console.log("ERROR, this.actualStat ist noch nicht vorhanden. Use " + this + ".getActualStat.");
+		}
+	},/*
+	this.generateStatAllInOne = function() {
+		this.stat = [];
+		for(i = 0; i <= 3; i++) {
+			this.stat.push(this.legendaryRoll());
+		}
+		this.sortAscStat = sortAsc([...this.stat]); // Das Stat Array, der größe nach sortiert, hat noch keinen Nutzen
+		this.statString = ([...this.stat]).toString(); // Das Stat Array als String
+		this.statString = this.statString.replace(/,/g," + "); // Der String des Stat Arrays verschönert, um es später besser zu verstehen.
+		this.actualStat = sortAsc([...this.stat]).slice(1,4);
+		this.statValue = sumOfArray( this.actualStat );
+
+		return this.statValue;
+	},*/
 	this.generateStat = function() {
 		if( this.statValue === undefined ) {
 			this.calculateStat();
@@ -98,31 +147,6 @@ function Stat( boundElement ) {
 		}
 		this.boundElement.children[0].innerText = this.statString + " drop(" + Math.min(...this.stat) + ")" + " = "; // Der mathematische Weg zu dem Wert
 		this.boundElement.children[1].innerText = this.statValue; // Der Wert, des Stats
-	}
-}
-
-function Dice( diceMin, diceMax ) {
-	this.diceMin = diceMin,
-	this.diceMax = diceMax,
-	this.rollDice = function( min, max ) {
-		if( !min && !max ) {
-			min = this.diceMin;
-			max = this.diceMax;	
-		}
-		return Math.floor( Math.random() * ((max) - (min - 1))) + min;
-	},
-	this.legendaryRoll = function( rerolled ) {
-		number = Math.floor( Math.random() * ( (this.diceMax) - (this.diceMin - 1) )) + this.diceMin;
-
-		if( rerolled === true ) {
-			return number;
-		}
-
-		if( number === 1 ) {
-			return this.legendaryRoll( true );
-		}
-
-		return number;
 	}
 }
 
@@ -154,15 +178,24 @@ function Character( name ) {
 	}
 }
 
-const test = new Character();
-
 /* OBJECTS UND OBJECT LITERALS */
 // Display
+/** Requires:
+ * ../modules/Dice.js
+ * ../modules/Character.js
+ */
 const Display = {
 	currentlyDisplayed: { /* Hier kommt dann der Character rein, der gerade angezeigt wird. */ },
 	toggleDisplay: function() {
 		/* Hier kommt dann die Funktion rein, um einen Leeren, oder einen alten Character anzuzeigen. */
-	}
+	},
+	dice4: new Dice( 1, 4 ),
+	dice6: new Dice( 1, 6 ),
+	dice8: new Dice( 1, 8 ),
+	dice10: new Dice( 1, 10 ),
+	dice12: new Dice( 1, 12 ),
+	dice20: new Dice( 1, 20 ),
+	dice100: new Dice( 1, 100 ),
 }
 
 // Optionen
@@ -179,14 +212,19 @@ const PageOptions = {
 	}
 }
 
-// Alle Dices.
-const dice4 = new Dice(1, 4);
-const dice6 = new Dice(1, 6);
-const dice8 = new Dice(1, 8);
-const dice10 = new Dice(1, 10);
-const dice12 = new Dice(1, 12);
-const dice20 = new Dice(1, 20);
-const dice100 = new Dice(1, 100);
+const test = new Character();
+const diceMagicBtn = document.querySelector("#btn");
+let arrayOfCharacters = [];
+var currentCharacterCounter = 0;
+
+diceMagicBtn.addEventListener('click', generateNewCharacter());
+
+function generateNewCharacter() {
+	let newCharacter = new Character();
+	arrayOfCharacters.push( newCharacter );
+	arrayOfCharacters[currentCharacterCounter].generateStats();
+	currentCharacterCounter++;
+}
 
 /* FUNCTIONS */
 /* Versteckt und zeigt die DM Optionenm, nachdem ein Passwort abgefragt wurde. */
